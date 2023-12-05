@@ -7,3 +7,7 @@ import * as path from 'path';
 export const readTextFile = (filePath: string): Array<string> => {
   return fs.readFileSync(path.join(__dirname, filePath)).toString().split("\n");
 }
+
+export const readTextFileString = (filePath: string): string => {
+  return fs.readFileSync(path.join(__dirname, filePath)).toString();
+}

@@ -26,7 +26,7 @@ interface Game {
     numbers: number;
 }
 
-export const part2 = readTextFile('./4/input.txt').reduce<number>(
+export const part2 = lines.reduce<number>(
   (acc, line, index) => {
     const numberLineWin: number = getNumberMatchingByLine(line, index);
     

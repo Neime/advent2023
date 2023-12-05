@@ -3,7 +3,7 @@ import { readTextFile } from '../readfile';
 
 const lines = readTextFile('./3/input.txt');
 const numbers = [];
-export const part1 = readTextFile('./3/input.txt').reduce<number>(
+export const part1 = lines.reduce<number>(
   (acc, line, index) => {
     const regex = /\d+/g;
     let match;
@@ -30,9 +30,7 @@ export const part1 = readTextFile('./3/input.txt').reduce<number>(
 
 console.log(`Day 3 Part 1: ${part1}`);
 
-
-const lines2 = readTextFile('./3/input.txt');
-export const part2 = readTextFile('./3/input.txt').reduce<number>(
+export const part2 = lines.reduce<number>(
   (acc, line, index) => {
     const regex = /\*/g;
     let match;
@@ -41,8 +39,8 @@ export const part2 = readTextFile('./3/input.txt').reduce<number>(
     while ((match = regex.exec(line)) !== null) {
         const symbolPosition = match.index;
         const digitsLine = getDigitsAndPosition(line);
-        const digitsPrevLine = getDigitsAndPosition(lines2[index-1]);
-        const digitsNextLine = getDigitsAndPosition(lines2[index+1]);
+        const digitsPrevLine = getDigitsAndPosition(lines[index-1]);
+        const digitsNextLine = getDigitsAndPosition(lines[index+1]);
 
         const matchDigits = digitMatchPosition([...digitsLine, ...digitsNextLine, ...digitsPrevLine], symbolPosition);
 
