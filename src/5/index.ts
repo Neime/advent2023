@@ -2,7 +2,6 @@ import { readTextFileString, readTextFile } from '../readfile';
 
 const lines = readTextFileString('./5/input.txt');
 
-
 interface Range {
     destinationStart: number;
     destinationEnd: number;
@@ -95,24 +94,48 @@ export const part1 = seeds.match(/\d+/g).reduce<number>(
 0
 );
 
-const part2 = function() {
-    for (let location: number = 0; location < 100000000; location++) {
-        const humidity: number = findSource(location, locations);
-        const temperature: number = findSource(humidity, humiditys);
-        const light: number = findSource(temperature, temperatures);
-        const water: number = findSource(light, lights);
-        const fertilizer: number = findSource(water, waters);
-        const soil: number = findSource(fertilizer, fertilizers);
-        const seed: number = findSource(soil, soils);
-        
-        const hasInSeedRange: boolean = seedRanges.some((range) => {
-            return range.start <= seed && seed <= range.end;
-        });
-        if (hasInSeedRange) {
-            return location;
+const [seedsStr, ...convertersSrt]: Array<string> = lines.match(/[^:]+(\d)/g) || [];
+const seedsMap = seedsStr.match(/\d+/g).map((val, index, array) => {
+    if (index % 2 === 0) { return [parseInt(array[index]), parseInt(array[index])+parseInt(array[index + 1])-1, -1] }
+}).filter(val => val);
+
+const maps = convertersSrt.map((converterStr, index) => {
+    return converterStr.trim().split("\n").map((line, index) => {
+        const [dest, source, length] = line.split(' ').map(Number);
+        return [source, source + length - 1, dest - source];
+    });
+});
+
+let candidateSeeds: number[] = [];
+seedLoop: while (seedsMap.length > 0) {
+    let [seedMin, seedMax, depth] = seedsMap.pop();
+
+    if (depth === maps.length - 1) {
+        candidateSeeds.push(seedMin);
+        continue seedLoop;
+    }
+
+    for (const [sourceMin, sourceMax, diff] of maps[depth + 1]) {
+        if (seedMin <= sourceMax && sourceMin <= seedMax) {
+            const intersect: number[] = [Math.max(seedMin, sourceMin), Math.min(seedMax, sourceMax)];
+            seedsMap.push([intersect[0] + diff, intersect[1] + diff, depth + 1]);
+
+            if (seedMin < intersect[0]) {
+                seedsMap.push([seedMin, intersect[0] - 1, depth]);
+            }
+
+            if (seedMax > intersect[1]) {
+                seedsMap.push([intersect[1] + 1, seedMax, depth]);
+            }
+
+            continue seedLoop;
         }
+    }
+
+    if (!candidateSeeds.includes(seedMin)) {
+        seedsMap.push([seedMin, seedMax, depth + 1]);
     }
 }
 
 console.log(`Day 5 Part 1: ${part1}`);
-console.log(`Day 5 Part 2: ${part2()}`);''
+console.log(`Day 5 Part 2: ${Math.min(...candidateSeeds).toString()}`);''
