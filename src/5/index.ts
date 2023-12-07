@@ -138,4 +138,4 @@ seedLoop: while (seedsMap.length > 0) {
 }
 
 console.log(`Day 5 Part 1: ${part1}`);
-console.log(`Day 5 Part 2: ${Math.min(...candidateSeeds).toString()}`);''
+console.log(`Day 5 Part 2: ${Math.min(...candidateSeeds).toString()}`);

@@ -5,6 +5,8 @@ const [timesStr, distancesStr] = readTextFile('./6/input.txt');
 const times: string[] = timesStr.split(' ').filter(val => val).slice(1);
 const distances: string[] = distancesStr.split(' ').filter(val => val).slice(1);
 
+console.time('Execution Time');
+
 const races: number[][] = times.map((time, index) => {
     return [
         parseInt(time),
@@ -29,7 +31,11 @@ export const part1: number = racesMaps.reduce((acc, raceMap, index) => {
     return (acc === 0 ? 1 : acc) * raceMap.size;
 }, 0);
 
-
+console.log(`Day 6 Part 1: ${part1}`);
+console.timeEnd('Execution Time');
+console.log('------');
+console.time('Execution Time');
+const initialMemoryUsagePart2 = process.memoryUsage().heapUsed;
 const time: number = parseInt(times.reduce((acc, time) => {
     return acc + time;
 }, ''));
@@ -43,5 +49,6 @@ for (let i: number = 1; i < time; i++) {
     if (distanceRun > distance) numberRaceWin++;
 }
 
-console.log(`Day 6 Part 1: ${part1}`);
-console.log(`Day 6 Part 2: ${numberRaceWin}`);''
+console.log(`Day 6 Part 2: ${numberRaceWin}`);
+console.timeEnd('Execution Time');
+
